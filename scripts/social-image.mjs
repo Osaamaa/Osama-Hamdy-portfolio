@@ -1,0 +1,24 @@
+import { createRequire } from "node:module";
+import { mkdir, writeFile } from "node:fs/promises";
+
+// The override is useful when generating assets with a preinstalled offline toolchain.
+const require = createRequire(import.meta.url);
+const sharp = require(process.env.SHARP_MODULE_PATH || "sharp");
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+<rect width="1200" height="630" fill="#f7f7f2"/>
+<path d="M795 660V456c0-40 23-63 63-63h90c40 0 64-24 64-64V168c0-42 26-65 65-65h150" fill="none" stroke="#dae2f5" stroke-width="3"/>
+<path d="M725 660V508c0-39 22-61 63-61h99c41 0 64-24 64-64V228c0-43 26-66 67-66h205" fill="none" stroke="#2454e6" stroke-width="8"/>
+<circle cx="951" cy="299" r="12" fill="#f7f7f2" stroke="#2454e6" stroke-width="5"/>
+<circle cx="1090" cy="162" r="13" fill="#2454e6"/><circle cx="1090" cy="162" r="5" fill="#f7f7f2"/>
+<circle cx="80" cy="68" r="5" fill="#2454e6"/>
+<text x="99" y="74" fill="#566073" font-family="Arial,sans-serif" font-size="15" letter-spacing="2">SOFTWARE ENGINEER &amp; PRODUCT BUILDER</text>
+<g font-family="Arial,sans-serif" font-size="82" font-weight="600" letter-spacing="-4"><text x="76" y="217" fill="#1b2025">I build products</text><text x="76" y="308" fill="#1b2025">people</text><text x="330" y="308" fill="#2454e6">actually use.</text></g>
+<text x="80" y="402" fill="#626870" font-family="Arial,sans-serif" font-size="22">From a real problem to 250K+ downloads.</text>
+<path d="M80 484h1040" stroke="#dddfda"/>
+<text x="80" y="549" fill="#1b2025" font-family="Arial,sans-serif" font-size="24" font-weight="600">Osama Hamdy</text>
+<text x="1120" y="549" text-anchor="end" fill="#626870" font-family="Arial,sans-serif" font-size="16">Egypt · Engineering · Product</text>
+</svg>`;
+await mkdir("public", { recursive: true });
+await writeFile("public/og.svg", svg);
+await sharp(Buffer.from(svg)).png().toFile("public/og.png");
+console.log("Created public/og.png (1200 × 630) and its editable SVG source.");
